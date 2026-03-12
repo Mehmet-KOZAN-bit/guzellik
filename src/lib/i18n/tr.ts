@@ -1,0 +1,83 @@
+export const tr = {
+  nav: {
+    home: "Ana Sayfa",
+    services: "Hizmetler",
+    gallery: "Galeri",
+    about: "Hakkımızda",
+    contact: "İletişim",
+    book: "Randevu Al",
+  },
+  hero: {
+    title: "GlowLuxe Unisex Güzellik Merkezi",
+    subtitle: "Premium Saç ve Güzellik Deneyimi",
+    bookBtn: "Randevu Al",
+    servicesBtn: "Hizmetleri İncele",
+  },
+  services: {
+    title: "Premium Hizmetlerimiz",
+    bookNow: "Hemen Al",
+    luxuriousCare: "Lüks Bakım",
+    list: {
+      haircut: { name: "Saç Kesimi ve Şekillendirme", desc: "Size özel profesyonel kesim ve tasarım." },
+      color: { name: "Saç Boyama", desc: "Canlı renkler, röfle ve balyaj uygulamaları." },
+      treatment: { name: "Saç Bakımı", desc: "Derinlemesine nemlendirme ve saç derisi terapisi." },
+      beard: { name: "Sakal Bakımı", desc: "Hassas kesim ve şekillendirme." },
+      skincare: { name: "Cilt Bakımı", desc: "Yenileyici cilt bakımı ve yüz terapileri." },
+      makeup: { name: "Makyaj", desc: "Özel günleriniz için profesyonel makyaj." },
+      keratin: { name: "Keratin Bakımı", desc: "Pürüzsüz, elektriklenmeyen parlak saçlar." },
+      extensions: { name: "Saç Kaynak", desc: "Premium kaynaklarla uzun ve hacimli saçlar." }
+    }
+  },
+  booking: {
+    title: "Randevu Oluştur",
+    name: "Ad Soyad",
+    phone: "Telefon",
+    email: "E-posta",
+    service: "Hizmet",
+    date: "Tarih",
+    time: "Saat",
+    message: "Mesaj (İsteğe bağlı)",
+    submit: "Randevuyu Onayla",
+    selectService: "Bir hizmet seçin",
+    placeholderStatus: "Ödeme başarısız. Lütfen tekrar deneyin.",
+    placeholders: {
+      name: "Adınız ve soyadınız",
+      phone: "05XX XXX XX XX",
+      email: "ornek@email.com",
+      message: "Özel istekleriniz veya sormak istedikleriniz...",
+    },
+    vatIncluded: "KDV Dahil",
+    servicePrice: "Hizmet Bedeli",
+    depositAmount: "%50 Kapora (Şimdi Ödenir)",
+    success: "Randevunuz başarıyla oluşturuldu!",
+    successSub: "Randevunuzu onaylamak için kısa süre içinde sizinle iletişime geçeceğiz.",
+    bookAnother: "Yeni Randevu Al",
+    backToHome: "Ana Sayfaya Dön",
+    processing: "İşleniyor...",
+    error: "Randevu oluşturulamadı. Lütfen tekrar deneyin.",
+  },
+  footer: {
+    address: "Gazeteci Hasan Tahsin Cd, Ortaköy",
+    phone: "+90 533 870 73 28",
+    rights: "Tüm hakları saklıdır.",
+    explore: "Keşfedin",
+  },
+  gallery: {
+    subtitle: "Premium salon deneyimimizi galerimiz üzerinden keşfedin.",
+  },
+  about: {
+    experience: "Deneyim",
+    redefiningTitle: "Güzelliği Yeniden",
+    redefiningSubtitle: "Tanımlıyoruz",
+    description1: "GlowLuxe Unisex Güzellik Merkezi'nde gerçek güzelliğin özgüven ve olağanüstü bakımdan geldiğine inanıyoruz. Herkese lüks bir deneyim sunma vizyonuyla kurulan merkezimizde, modern trendleri zamansız tekniklerle harmanlıyoruz.",
+    description2: "Uzman stilistlerimiz ve estetisyenlerimizden oluşan ekibimiz, rahatlatıcı ve premium bir ortamda kişiselleştirilmiş tedaviler sunmaya kendini adamıştır. İster basit bir düzeltme ister tam bir dönüşüm olsun, her ziyaretinizin sizi ışıldatarak sonlanmasını sağlıyoruz.",
+  },
+  contact: {
+    subtitle: "Sizden haber almayı çok isteriz. Randevu alın veya sorularınız için bize ulaşın.",
+    getInTouch: "İletişime Geçin",
+    address: "Adres",
+    phone: "Telefon",
+    email: "E-posta",
+    social: "Sosyal Medya ve Hızlı Erişim",
+  }
+};

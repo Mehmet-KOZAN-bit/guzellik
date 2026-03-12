@@ -1,0 +1,120 @@
+import { NextResponse } from 'next/server';
+import getIyzipay from '@/lib/iyzipay';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+import { SERVICE_PRICES } from '@/lib/constants';
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { name, phone, email, service, date, time, message } = body;
+
+    if (!name || !phone || !email || !service || !date || !time) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (!db) {
+      return NextResponse.json({ error: 'Database not initialized' }, { status: 500 });
+    }
+
+    const servicePrice = SERVICE_PRICES[service] || 500;
+    const depositAmount = servicePrice / 2; // 50% deposit
+
+    // 1. Create a pending appointment in Firestore FIRST
+    const appointmentData = {
+      name,
+      phone,
+      email,
+      service,
+      servicePrice,
+      depositAmount,
+      date,
+      time,
+      message: message || '',
+      status: 'pending',
+      paymentStatus: 'pending',
+      paymentId: '', // will be updated via callback
+      createdAt: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(collection(db, 'appointments'), appointmentData);
+    const appointmentId = docRef.id;
+
+    // 2. Initialize iyzico checkout form
+    const request = {
+      locale: 'tr',
+      conversationId: appointmentId,
+      price: depositAmount.toString(),
+      paidPrice: depositAmount.toString(),
+      currency: 'TRY', // Use Iyzipay.CURRENCY.TRY practically if enum exists, 'TRY' string works too
+      basketId: `B-${appointmentId}`,
+      paymentGroup: 'PRODUCT',
+      callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/payment/callback?id=${appointmentId}`,
+      enabledInstallments: [1],
+      buyer: {
+        id: `BY-${Date.now()}`,
+        name: name.split(' ')[0] || 'GlowLuxe',
+        surname: name.split(' ').slice(1).join(' ') || 'Customer',
+        gsmNumber: phone,
+        email: email,
+        identityNumber: '11111111111', // Dummy for sandbox
+        lastLoginDate: '2015-10-05 12:43:35',
+        registrationDate: '2013-04-21 15:12:09',
+        registrationAddress: 'Ortakoy, Istanbul',
+        ip: '85.34.78.112',
+        city: 'Istanbul',
+        country: 'Turkey',
+        zipCode: '34347'
+      },
+      shippingAddress: {
+        contactName: name,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Ortakoy, Istanbul',
+        zipCode: '34347'
+      },
+      billingAddress: {
+        contactName: name,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Ortakoy, Istanbul',
+        zipCode: '34347'
+      },
+      basketItems: [
+        {
+          id: service,
+          name: `Deposit for ${service}`,
+          category1: 'Beauty Service',
+          itemType: 'VIRTUAL',
+          price: depositAmount.toString()
+        }
+      ]
+    };
+
+    let iyzipayInstance;
+    try {
+      iyzipayInstance = getIyzipay();
+    } catch (err: any) {
+      console.error("Iyzico Configuration Error:", err.message);
+      return NextResponse.json({ error: 'Payment system is not configured' }, { status: 500 });
+    }
+
+    return new Promise((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      iyzipayInstance.checkoutFormInitialize.create(request as any, (err: any, result: any) => {
+        if (err || result.status !== 'success') {
+          console.error("Iyzico Initialization Error:", err || result.errorMessage);
+          return resolve(NextResponse.json({ error: result?.errorMessage || 'Payment initialization failed' }, { status: 500 }));
+        }
+
+        // Return the payment page URL to redirect the user
+        return resolve(NextResponse.json({ paymentPageUrl: result.paymentPageUrl + '&iframe=false' }));
+      });
+    });
+
+  } catch (error) {
+    console.error("Checkout route error:", error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

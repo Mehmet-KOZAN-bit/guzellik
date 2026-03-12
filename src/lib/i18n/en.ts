@@ -1,0 +1,83 @@
+export const en = {
+  nav: {
+    home: "Home",
+    services: "Services",
+    gallery: "Gallery",
+    about: "About",
+    contact: "Contact",
+    book: "Book Appointment",
+  },
+  hero: {
+    title: "GlowLuxe Unisex Beauty Center",
+    subtitle: "Premium Hair & Beauty Experience",
+    bookBtn: "Book Appointment",
+    servicesBtn: "View Services",
+  },
+  services: {
+    title: "Our Premium Services",
+    bookNow: "Book Now",
+    luxuriousCare: "Luxurious Care",
+    list: {
+      haircut: { name: "Haircut & Styling", desc: "Expert cut and styling tailored to you." },
+      color: { name: "Hair Coloring", desc: "Vibrant colors, highlights, and balayage." },
+      treatment: { name: "Hair Treatment", desc: "Deep conditioning and scalp therapy." },
+      beard: { name: "Beard Grooming", desc: "Precision trimming and shaping." },
+      skincare: { name: "Skin Care", desc: "Rejuvenating facials and treatments." },
+      makeup: { name: "Makeup", desc: "Professional makeup for any occasion." },
+      keratin: { name: "Keratin Treatment", desc: "Smooth, frizz-free, and shiny hair." },
+      extensions: { name: "Hair Extensions", desc: "Length and volume with premium extensions." }
+    }
+  },
+  booking: {
+    title: "Book an Appointment",
+    name: "Name",
+    phone: "Phone",
+    email: "Email",
+    service: "Service",
+    date: "Date",
+    time: "Time",
+    message: "Message (Optional)",
+    submit: "Confirm Booking",
+    selectService: "Select a service",
+    placeholderStatus: "Payment failed. Please try again.",
+    placeholders: {
+      name: "Your full name",
+      phone: "+90 5XX XXX XX XX",
+      email: "example@email.com",
+      message: "Special requests or questions...",
+    },
+    vatIncluded: "VAT included",
+    servicePrice: "Service Price",
+    depositAmount: "50% Deposit (Pay Now)",
+    success: "Your appointment has been booked successfully!",
+    successSub: "We will contact you shortly to confirm your appointment.",
+    bookAnother: "Book Another",
+    backToHome: "Back to Home",
+    processing: "Processing...",
+    error: "Failed to book appointment. Please try again.",
+  },
+  footer: {
+    address: "Gazeteci Hasan Tahsin Cd, Ortaköy",
+    phone: "+90 533 870 73 28",
+    rights: "All rights reserved.",
+    explore: "Explore",
+  },
+  gallery: {
+    subtitle: "Explore our premium salon experience through our gallery.",
+  },
+  about: {
+    experience: "The Experience",
+    redefiningTitle: "Redefining Beauty",
+    redefiningSubtitle: "Standards",
+    description1: "At GlowLuxe Unisex Beauty Center, we believe that true beauty comes from confidence and exceptional care. Founded with a vision to provide a luxury experience for everyone, we blend modern trends with timeless techniques.",
+    description2: "Our team of expert stylists and aestheticians are dedicated to offering personalized treatments in a relaxing, premium environment. Whether it's a simple trim or a complete transformation, we ensure every visit leaves you glowing.",
+  },
+  contact: {
+    subtitle: "We'd love to hear from you. Book an appointment or reach out with any questions.",
+    getInTouch: "Get in Touch",
+    address: "Address",
+    phone: "Phone",
+    email: "Email",
+    social: "Social & Quick Connect",
+  }
+};
