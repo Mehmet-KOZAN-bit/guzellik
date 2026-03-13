@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Check, X, Trash2, Clock, Calendar, Mail, Phone, ExternalLink, MessageCircle } from "lucide-react";
+import { Check, X, Trash2, Clock, Calendar, Mail, Phone, ExternalLink, MessageCircle, RefreshCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/Modal";
 
@@ -19,7 +19,7 @@ interface Appointment {
   time: string;
   message: string;
   status: "pending" | "approved" | "cancelled" | "confirmed";
-  paymentStatus?: "pending" | "paid" | "failed";
+  paymentStatus?: "pending" | "paid" | "failed" | "refunded";
   paymentId?: string;
   createdAt: unknown;
 }
@@ -94,6 +94,42 @@ export default function AppointmentsPage() {
     const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz başarıyla oluşturulmuştur.\n\nGlowLuxe'ü tercih ettiğiniz için teşekkür ederiz!`;
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
+  };
+
+  const handleRefund = async (appt: Appointment) => {
+    setModal({
+      isOpen: true,
+      title: "Ücret İadesi (Refund)",
+      message: `${appt.name} adlı müşterinin ${appt.depositAmount} ₺ tutarındaki ödemesini iade etmek ve randevuyu iptal etmek istediğinize emin misiniz? (Gün içi işlemlerde kesintisiz iptal olur)`,
+      type: "confirm",
+      onConfirm: async () => {
+        try {
+          const res = await fetch("/api/payment/refund", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ appointmentId: appt.id }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            setModal({
+              isOpen: true,
+              title: "İade Başarısız",
+              message: data.error || "İade işlemi sırasında bir hata oluştu.",
+              type: "error",
+            });
+          } else {
+            setModal({
+              isOpen: true,
+              title: "İade Başarılı",
+              message: "Ödeme başarıyla iade edildi ve randevu iptal edildi.",
+              type: "success",
+            });
+          }
+        } catch (error) {
+          console.error("Refund error:", error);
+        }
+      }
+    });
   };
 
   const filteredAppointments = filter === "all" 
@@ -229,6 +265,9 @@ export default function AppointmentsPage() {
                         {appt.paymentStatus === 'failed' && (
                           <span className="text-[9px] font-black text-rose-400 uppercase tracking-wider">Payment Failed</span>
                         )}
+                        {appt.paymentStatus === 'refunded' && (
+                          <span className="text-[9px] font-black text-gray-500 uppercase tracking-wider">Refunded</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-5 text-right">
@@ -244,10 +283,20 @@ export default function AppointmentsPage() {
                             <button
                               onClick={() => handleUpdateStatus(appt.id, "cancelled")}
                               className="p-2 text-rose-600 bg-rose-50 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm"
+                              title="İptal Et"
                             >
                               <X size={16} />
                             </button>
                           </>
+                        )}
+                        {appt.paymentStatus === "paid" && appt.status !== "cancelled" && (
+                          <button
+                            onClick={() => handleRefund(appt)}
+                            className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white rounded-xl transition-all shadow-sm"
+                            title="İade Et (Refund)"
+                          >
+                            <RefreshCcw size={16} />
+                          </button>
                         )}
                         <button
                           onClick={() => handleWhatsApp(appt)}

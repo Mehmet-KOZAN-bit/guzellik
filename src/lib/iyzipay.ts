@@ -147,3 +147,35 @@ export async function retrieveCheckoutForm(token: string) {
 
   return await response.json();
 }
+
+// ─── Cancel Payment (Full refund for same-day or pending settlement) ─────────
+export async function cancelPayment(paymentId: string) {
+  const apiKey    = (process.env.IYZICO_API_KEY    || '').trim();
+  const secretKey = (process.env.IYZICO_SECRET_KEY || '').trim();
+  const baseUrl   = (process.env.IYZICO_BASE_URL   || 'https://sandbox-api.iyzipay.com').trim();
+
+  const uriPath     = '/payment/iyzipos/cancel';
+  const randomString = generateRandomString();
+
+  const body = {
+    locale:         'tr',
+    conversationId: randomString,
+    paymentId:      paymentId,
+    ip:             '85.34.78.112',
+  };
+
+  const authorization = generateAuthV2(apiKey, secretKey, uriPath, body, randomString);
+
+  const response = await fetch(`${baseUrl}${uriPath}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type':          'application/json',
+      'x-iyzi-rnd':            randomString,
+      'x-iyzi-client-version': 'iyzipay-node-2.0.65',
+      'Authorization':          authorization,
+    },
+    body: JSON.stringify(body),
+  });
+
+  return await response.json();
+}
