@@ -15,7 +15,8 @@ import {
   ChevronRight,
   LogOut,
   ExternalLink,
-  Users
+  Users,
+  UserRound
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -26,6 +27,7 @@ const navItems = [
   { name: 'Appointments', href: '/admin/appointments', icon: CalendarCheck },
   { name: 'Customers', href: '/admin/customers', icon: Users },
   { name: 'Services', href: '/admin/services', icon: Scissors },
+  { name: 'Staff', href: '/admin/staff', icon: UserRound },
   { name: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
@@ -128,6 +130,7 @@ export default function AdminLayout({
                 'Appointments': t.admin.sidebar.appointments,
                 'Customers': t.admin.sidebar.customers,
                 'Services': t.admin.sidebar.services,
+                'Staff': t.admin.sidebar.staff,
                 'Gallery': t.admin.sidebar.gallery,
                 'Settings': t.admin.sidebar.settings,
               };

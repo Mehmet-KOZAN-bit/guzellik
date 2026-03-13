@@ -89,6 +89,7 @@ export const tr = {
       customers: "Müşteriler",
       services: "Hizmetler",
       gallery: "Galeri",
+      staff: "Personel",
       settings: "Ayarlar",
       viewWebsite: "Siteyi Görüntüle",
       logout: "Çıkış Yap"
@@ -126,6 +127,19 @@ export const tr = {
       refundBtn: "İade Et",
       cancelBtn: "Randevuyu İptal Et",
       whatsappBtn: "WhatsApp ile Bildir"
+    },
+    staff: {
+      title: "Personel Yönetimi",
+      subtitle: "Salon uzmanlarını ve hizmetlerini ekleyin veya yönetin.",
+      addBtn: "Personel Ekle",
+      name: "Ad Soyad",
+      titleLabel: "Unvan / Görev",
+      services: "Atanan Hizmetler",
+      order: "Sıralama",
+      addNew: "Yeni Personel Ekle",
+      editStaff: "Personeli Düzenle",
+      noStaff: "Personel bulunamadı.",
+      selectAll: "Tüm Hizmetleri Seç"
     }
   }
 };

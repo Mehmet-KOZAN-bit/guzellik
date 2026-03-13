@@ -89,6 +89,7 @@ export const en = {
       customers: "Customers",
       services: "Services",
       gallery: "Gallery",
+      staff: "Staff",
       settings: "Settings",
       viewWebsite: "View Website",
       logout: "Log out"
@@ -126,6 +127,19 @@ export const en = {
       refundBtn: "Refund",
       cancelBtn: "Cancel Booking",
       whatsappBtn: "Notify via WhatsApp"
+    },
+    staff: {
+      title: "Staff Management",
+      subtitle: "Add or manage salon experts and their services.",
+      addBtn: "Add Staff",
+      name: "Name & Surname",
+      titleLabel: "Title / Role",
+      services: "Assigned Services",
+      order: "Display Order",
+      addNew: "Add New Staff Member",
+      editStaff: "Edit Staff Member",
+      noStaff: "No staff members found.",
+      selectAll: "Select All Services"
     }
   }
 };

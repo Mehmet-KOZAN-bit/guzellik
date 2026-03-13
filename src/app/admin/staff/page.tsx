@@ -5,6 +5,8 @@ import { collection, query, orderBy, onSnapshot, doc, updateDoc, addDoc, deleteD
 import { db } from "@/lib/firebase";
 import { User, Edit2, Save, X, Plus, Trash2, Scissors } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
+import Modal from "@/components/Modal";
 
 interface StaffMember {
   id: string;
@@ -17,12 +19,25 @@ interface StaffMember {
 }
 
 export default function StaffCMS() {
+  const { t, language } = useLanguage();
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<StaffMember>>({});
   const [isAdding, setIsAdding] = useState(false);
   const [services, setServices] = useState<any[]>([]);
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "warning" | "error" | "info" | "confirm";
+    onConfirm?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   // 1. Fetch Staff
   useEffect(() => {
@@ -75,13 +90,22 @@ export default function StaffCMS() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!db || !confirm("Are you sure you want to remove this expert?")) return;
-    try {
-      await deleteDoc(doc(db, "staff", id));
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
+  const handleDelete = async (id: string, name: string) => {
+    if (!db) return;
+    setModal({
+      isOpen: true,
+      title: `${t.admin.common.delete} ${t.admin.staff.title}`,
+      message: `'${name}' isimli personeli silmek istediğinizden emin misiniz?`,
+      type: "confirm",
+      onConfirm: async () => {
+        if (!db) return;
+        try {
+          await deleteDoc(doc(db, "staff", id));
+        } catch (err) {
+          console.error("Delete error:", err);
+        }
+      }
+    });
   };
 
   const toggleService = (serviceId: string) => {
@@ -104,8 +128,8 @@ export default function StaffCMS() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 leading-tight">Expert Management</h1>
-          <p className="text-gray-500 font-medium mt-1 uppercase text-xs tracking-widest">Manage your team and their specializations</p>
+          <h1 className="text-3xl font-bold text-gray-900 leading-tight">{t.admin.staff.title}</h1>
+          <p className="text-gray-500 font-medium mt-1 uppercase text-xs tracking-widest">{t.admin.staff.subtitle}</p>
         </div>
         {!isAdding && (
           <button 
@@ -113,7 +137,7 @@ export default function StaffCMS() {
             className="flex items-center space-x-2 px-5 py-2.5 bg-primary text-secondary rounded-xl font-bold text-sm shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02]"
           >
             <Plus size={18} />
-            <span>Add New Expert</span>
+            <span>{t.admin.staff.addBtn}</span>
           </button>
         )}
       </div>
@@ -123,21 +147,21 @@ export default function StaffCMS() {
           {isAdding && (
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="bg-white p-8 rounded-3xl border-2 border-primary shadow-2xl space-y-6">
               <div className="flex justify-between items-center pb-4 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-primary">New Expert Profile</h2>
+                <h2 className="text-xl font-bold text-primary">{t.admin.staff.addNew}</h2>
                 <button onClick={() => setIsAdding(false)} className="text-gray-400 hover:text-red-500"><X size={20} /></button>
               </div>
               
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">Full Name</label>
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">{t.admin.staff.name}</label>
                   <input type="text" value={editFormData.name || ""} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary/20 outline-none font-bold" />
                 </div>
                 <div>
-                    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">Title / Speciality (EN)</label>
-                    <input type="text" value={editFormData.title || ""} onChange={(e) => setEditFormData({...editFormData, title: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary/20 outline-none font-bold placeholder:text-gray-300" placeholder="e.g. Master Stylist" />
+                    <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">{t.admin.staff.titleLabel}</label>
+                    <input type="text" value={editFormData.title || ""} onChange={(e) => setEditFormData({...editFormData, title: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary/20 outline-none font-bold placeholder:text-gray-300" placeholder="" />
                 </div>
                 <div>
-                   <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">Title / Speciality (RU)</label>
+                   <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2 block">{t.admin.staff.titleLabel} (RU)</label>
                    <input type="text" value={editFormData.titleRu || ""} onChange={(e) => setEditFormData({...editFormData, titleRu: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-primary/20 outline-none font-bold" />
                 </div>
                 <div className="col-span-2">
@@ -147,7 +171,7 @@ export default function StaffCMS() {
               </div>
 
               <div>
-                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-4 block">Assigned Services</label>
+                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-4 block">{t.admin.staff.services}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {services.map(s => (
                     <button 
@@ -160,14 +184,14 @@ export default function StaffCMS() {
                         : 'bg-gray-50 text-gray-400 border-gray-100 hover:border-primary/30'
                       }`}
                     >
-                      {s.name}
+                      {language === 'tr' ? (s.nameTr || s.name) : s.name}
                     </button>
                   ))}
                 </div>
               </div>
 
               <button onClick={handleAddNew} className="w-full py-4 bg-primary text-secondary rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-[1.01] active:scale-95 transition-all">
-                Create Profile
+                {t.admin.common.save}
               </button>
             </motion.div>
           )}
@@ -211,7 +235,7 @@ export default function StaffCMS() {
                     <div className="flex flex-wrap gap-2 pt-2">
                       {(isEditing ? editFormData.services : member.services)?.map(sid => {
                         const s = services.find(x => x.id === sid);
-                        return <span key={sid} className="px-3 py-1 bg-primary/5 text-primary rounded-lg text-[10px] font-black uppercase tracking-tighter border border-primary/5">{s?.name || sid}</span>;
+                        return <span key={sid} className="px-3 py-1 bg-primary/5 text-primary rounded-lg text-[10px] font-black uppercase tracking-tighter border border-primary/5">{s ? (language === 'tr' ? (s.nameTr || s.name) : s.name) : sid}</span>;
                       })}
                       {isEditing && (
                         <div className="w-full pt-4 space-y-2">
@@ -226,25 +250,36 @@ export default function StaffCMS() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    {isEditing ? (
-                      <>
-                        <button onClick={() => handleSave(member.id)} className="p-3 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 hover:scale-110 active:scale-90 transition-all"><Save size={18} /></button>
-                        <button onClick={() => setEditingId(null)} className="p-3 bg-gray-100 text-gray-400 rounded-xl hover:text-gray-600 transition-all"><X size={18} /></button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => handleEdit(member)} className="p-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-secondary transition-all"><Edit2 size={18} /></button>
-                        <button onClick={() => handleDelete(member.id)} className="p-3 bg-red-50 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all"><Trash2 size={18} /></button>
-                      </>
-                    )}
-                  </div>
+                      <div className="flex flex-col gap-2">
+                        {isEditing ? (
+                          <>
+                            <button onClick={() => handleSave(member.id)} className="p-3 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 hover:scale-110 active:scale-90 transition-all"><Save size={18} /></button>
+                            <button onClick={() => setEditingId(null)} className="p-3 bg-gray-100 text-gray-400 rounded-xl hover:text-gray-600 transition-all"><X size={18} /></button>
+                          </>
+                        ) : (
+                          <>
+                            <button onClick={() => handleEdit(member)} className="p-3 bg-primary/5 text-primary rounded-xl hover:bg-primary hover:text-secondary transition-all" title={t.admin.common.save}><Edit2 size={18} /></button>
+                            <button onClick={() => handleDelete(member.id, member.name)} className="p-3 bg-red-50 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all" title={t.admin.common.delete}><Trash2 size={18} /></button>
+                          </>
+                        )}
+                      </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onConfirm={modal.onConfirm}
+        confirmText={t.admin.common.confirm}
+        cancelText={t.admin.common.cancel}
+      />
     </div>
   );
 }
