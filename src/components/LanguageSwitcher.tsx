@@ -39,7 +39,7 @@ export default function LanguageSwitcher({
             transition={{ duration: 0.2 }}
             className="absolute right-0 mt-2 top-full py-2 w-24 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden"
           >
-            {(["tr", "en", "ru"] as const).map((lang) => (
+            {(["tr", "en", "ru", "ar"] as const).map((lang) => (
               <button
                 key={lang}
                 onClick={() => {

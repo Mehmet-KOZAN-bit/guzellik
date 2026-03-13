@@ -12,12 +12,15 @@ interface Service {
   name: string;
   nameTr: string;
   nameRu: string;
+  nameAr: string;
   desc: string;
   descTr: string;
   descRu: string;
+  descAr: string;
   longDesc?: string;
   longDescTr?: string;
   longDescRu?: string;
+  longDescAr?: string;
   price: number;
   duration: number; // in minutes
   img: string;
@@ -26,7 +29,7 @@ interface Service {
 }
 
 export default function ServicesCMS() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -190,6 +193,15 @@ export default function ServicesCMS() {
                         />
                       </div>
                       <div>
+                        <label className="text-[10px] font-black uppercase text-gray-400 tracking-tighter mb-1 block">{t.admin.servicesPage.arName}</label>
+                        <input 
+                          type="text" 
+                          value={editFormData.nameAr || ""}
+                          onChange={(e) => setEditFormData({ ...editFormData, nameAr: e.target.value })}
+                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-primary/20 transition-all font-arabic"
+                        />
+                      </div>
+                      <div>
                         <label className="text-[10px] font-black uppercase text-gray-400 tracking-tighter mb-1 block">{t.admin.servicesPage.price}</label>
                         <input 
                           type="number" 
@@ -228,6 +240,15 @@ export default function ServicesCMS() {
                       />
                     </div>
                     <div>
+                      <label className="text-[10px] font-black uppercase text-gray-400 tracking-tighter mb-1 block">{t.admin.servicesPage.descAr}</label>
+                      <textarea 
+                        rows={2}
+                        value={editFormData.descAr || ""}
+                        onChange={(e) => setEditFormData({ ...editFormData, descAr: e.target.value })}
+                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium focus:ring-2 focus:ring-primary/20 transition-all resize-none font-arabic"
+                      />
+                    </div>
+                    <div>
                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-tighter mb-1 block">{t.admin.servicesPage.longDescTr}</label>
                       <textarea 
                         rows={4}
@@ -255,15 +276,25 @@ export default function ServicesCMS() {
                         className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                       />
                     </div>
+                    <div>
+                      <label className="text-[10px] font-black uppercase text-gray-400 tracking-tighter mb-1 block">{t.admin.servicesPage.longDescAr}</label>
+                      <textarea 
+                        rows={4}
+                        value={editFormData.longDescAr || ""}
+                        onChange={(e) => setEditFormData({ ...editFormData, longDescAr: e.target.value })}
+                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium focus:ring-2 focus:ring-primary/20 transition-all resize-none font-arabic"
+                      />
+                    </div>
                     </div>
                   </div>
                 ) : (
                   <>
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 leading-tight">{service.nameTr}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 leading-tight">{language === 'tr' ? service.nameTr : language === 'ru' ? service.nameRu : language === 'ar' ? service.nameAr : service.name}</h3>
                         <p className="text-[10px] text-gray-400 font-bold uppercase">{service.name}</p>
                         {service.nameRu && <p className="text-[10px] text-secondary font-bold uppercase">{service.nameRu}</p>}
+                        {service.nameAr && <p className="text-[10px] text-secondary font-bold uppercase font-arabic">{service.nameAr}</p>}
                       </div>
                       <div className="text-right">
                         <div className="text-xl font-black text-primary">₺{service.price}</div>
@@ -271,7 +302,7 @@ export default function ServicesCMS() {
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 font-medium leading-relaxed italic line-clamp-2">
-                      {service.descTr}
+                      {language === 'tr' ? service.descTr : language === 'ru' ? service.descRu : language === 'ar' ? service.descAr : service.desc}
                     </p>
                   </>
                 )}

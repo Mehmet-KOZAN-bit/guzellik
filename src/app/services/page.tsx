@@ -24,9 +24,11 @@ interface Service {
   name: string;
   nameTr: string;
   nameRu: string;
+  nameAr: string;
   desc: string;
   descTr: string;
   descRu: string;
+  descAr: string;
   price: number;
   duration: number;
   img: string;
@@ -119,8 +121,8 @@ export default function ServicesPage() {
           >
           {services.map((service) => {
             const Icon = ICON_MAP[service.id] || Scissors;
-            const name = language === 'tr' ? service.nameTr : service.name;
-            const desc = language === 'tr' ? service.descTr : service.desc;
+            const name = language === 'tr' ? service.nameTr : language === 'ru' ? service.nameRu : language === 'ar' ? service.nameAr : service.name;
+            const desc = language === 'tr' ? service.descTr : language === 'ru' ? service.descRu : language === 'ar' ? service.descAr : service.desc;
 
             return (
               <motion.div
@@ -133,7 +135,7 @@ export default function ServicesPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={service.img}
-                    alt={language === 'tr' ? service.nameTr : service.name}
+                    alt={language === 'tr' ? service.nameTr : language === 'ru' ? service.nameRu : language === 'ar' ? service.nameAr : service.name}
                     style={{ 
                       objectPosition: `${service.focalPoint?.x ?? 50}% ${service.focalPoint?.y ?? 50}%` 
                     }}

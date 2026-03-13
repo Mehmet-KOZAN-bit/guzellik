@@ -101,7 +101,7 @@ export default function Navbar() {
                       transition={{ duration: 0.2 }}
                       className="absolute right-0 mt-2 py-2 w-24 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden"
                     >
-                      {(["tr", "en"] as const).map((lang) => (
+                      {(["tr", "en", "ru", "ar"] as const).map((lang) => (
                         <button
                           key={lang}
                           onClick={() => {
@@ -132,8 +132,12 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
             <button
-              onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-              className="p-2 text-primary"
+              onClick={() => {
+                const langs: ("tr" | "en" | "ru" | "ar")[] = ["tr", "en", "ru", "ar"];
+                const currentIndex = langs.indexOf(language as any);
+                setLanguage(langs[(currentIndex + 1) % langs.length]);
+              }}
+              className={`p-2 ${isScrolled ? "text-primary" : "text-white"}`}
             >
               <Globe size={20} />
             </button>

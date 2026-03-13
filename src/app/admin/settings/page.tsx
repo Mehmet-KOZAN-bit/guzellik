@@ -21,7 +21,7 @@ interface SiteConfig {
 }
 
 export default function SettingsCMS() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

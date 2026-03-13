@@ -17,12 +17,15 @@ interface Service {
   name: string;
   nameTr: string;
   nameRu: string;
+  nameAr: string;
   desc: string;
   descTr: string;
   descRu: string;
+  descAr: string;
   longDesc?: string;
   longDescTr?: string;
   longDescRu?: string;
+  longDescAr?: string;
   price: number;
   duration: number;
   img: string;
@@ -74,9 +77,9 @@ export default function ServiceDetail() {
     );
   }
 
-  const name = language === 'tr' ? service.nameTr : service.name;
-  const desc = language === 'tr' ? service.descTr : service.desc;
-  const longDesc = language === 'tr' ? service.longDescTr : service.longDesc;
+  const name = language === 'tr' ? service.nameTr : language === 'ru' ? service.nameRu : language === 'ar' ? service.nameAr : service.name;
+  const desc = language === 'tr' ? service.descTr : language === 'ru' ? service.descRu : language === 'ar' ? service.descAr : service.desc;
+  const longDesc = language === 'tr' ? service.longDescTr : language === 'ru' ? service.longDescRu : language === 'ar' ? service.longDescAr : service.longDesc;
 
   return (
     <main className="min-h-screen bg-white selection:bg-secondary/30">
@@ -107,7 +110,7 @@ export default function ServiceDetail() {
                 {t.nav.services}
               </Link>
               <ChevronRight size={14} className="opacity-50" />
-              <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50">Details</span>
+              <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50">{t.admin.servicesPage.editInfo.split(' ')[0]}</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-light text-white tracking-tight leading-tight mb-6">
@@ -117,7 +120,7 @@ export default function ServiceDetail() {
             <div className="flex flex-wrap items-center gap-6 text-white/80">
               <div className="flex items-center gap-2">
                 <Clock size={18} className="text-secondary" />
-                <span className="text-sm font-bold uppercase tracking-widest">{service.duration} {language === 'tr' ? 'Dakika' : 'Minutes'}</span>
+                <span className="text-sm font-bold uppercase tracking-widest">{service.duration} {language === 'tr' ? 'Dakika' : language === 'ru' ? 'минут' : language === 'ar' ? 'دقيقة' : 'Minutes'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CreditCard size={18} className="text-secondary" />
@@ -141,7 +144,7 @@ export default function ServiceDetail() {
             >
               <div className="space-y-6">
                 <h2 className="text-secondary tracking-[0.3em] text-xs font-black uppercase">
-                  Service Experience
+                  {language === 'tr' ? 'Hizmet Deneyimi' : language === 'ru' ? 'Опыт обслуживания' : language === 'ar' ? 'تجربة الخدمة' : 'Service Experience'}
                 </h2>
                 <p className="text-3xl md:text-4xl font-light text-primary leading-tight italic">
                   {desc}
@@ -171,8 +174,8 @@ export default function ServiceDetail() {
             >
               <div className="p-8 bg-primary rounded-3xl text-white shadow-2xl space-y-8">
                 <div className="space-y-2">
-                   <h3 className="text-2xl font-bold tracking-tight">Ready to Shine?</h3>
-                   <p className="text-white/60 text-sm font-medium">Book your session with our experts today and experience the GlowLuxe touch.</p>
+                   <h3 className="text-2xl font-bold tracking-tight">{language === 'tr' ? 'Parlamaya Hazır Mısın?' : language === 'ru' ? 'Готовы сиять?' : language === 'ar' ? 'جاهز للتألق؟' : 'Ready to Shine?'}</h3>
+                   <p className="text-white/60 text-sm font-medium">{language === 'tr' ? 'Bugün uzmanlarımızdan randevu alın ve GlowLuxe dokunuşunu deneyimleyin.' : language === 'ru' ? 'Запишитесь к нашим экспертам сегодня и почувствуйте прикосновение GlowLuxe.' : language === 'ar' ? 'احجز جلستك مع خبرائنا اليوم واختبر لمسة جلو لوكس.' : 'Book your session with our experts today and experience the GlowLuxe touch.'}</p>
                 </div>
 
                 <Link 
@@ -188,8 +191,8 @@ export default function ServiceDetail() {
                       <Scissors size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Expert Care</p>
-                      <p className="text-sm font-bold">Professional Specialists</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-white/40">{language === 'tr' ? 'Uzman Bakımı' : language === 'ru' ? 'Экспертный уход' : language === 'ar' ? 'رعاية الخبراء' : 'Expert Care'}</p>
+                      <p className="text-sm font-bold">{language === 'tr' ? 'Profesyonel Uzmanlar' : language === 'ru' ? 'Профессиональные специалисты' : language === 'ar' ? 'متخصصون محترفون' : 'Professional Specialists'}</p>
                     </div>
                   </div>
                 </div>

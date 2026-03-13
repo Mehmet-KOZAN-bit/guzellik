@@ -12,9 +12,11 @@ interface Service {
   name: string;
   nameTr: string;
   nameRu: string;
+  nameAr: string;
   desc: string;
   descTr: string;
   descRu: string;
+  descAr: string;
   price: number;
   duration: number;
   img: string;
@@ -73,8 +75,8 @@ export default function ServicesOverview() {
   if (services.length === 0) return null;
 
   const slide = services[current];
-  const name = language === 'tr' ? slide.nameTr : slide.name;
-  const desc = language === 'tr' ? slide.descTr : slide.desc;
+  const name = language === 'tr' ? slide.nameTr : language === 'ru' ? slide.nameRu : language === 'ar' ? slide.nameAr : slide.name;
+  const desc = language === 'tr' ? slide.descTr : language === 'ru' ? slide.descRu : language === 'ar' ? slide.descAr : slide.desc;
 
   return (
     <section className="py-24 bg-white">
