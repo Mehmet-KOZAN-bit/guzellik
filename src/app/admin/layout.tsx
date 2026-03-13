@@ -18,6 +18,7 @@ import {
   Users
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -184,14 +185,17 @@ export default function AdminLayout({
               <h2 className="text-gray-900 font-semibold text-lg">
                 {navItems.find(n => n.href === pathname || (n.href !== '/admin' && pathname.startsWith(n.href)))?.name || 'Dashboard'}
               </h2>
-            </div>
-            <div className="flex items-center space-x-4">
-               <div className="flex flex-col items-end mr-2 text-right hidden sm:flex">
-                 <span className="text-sm font-bold text-gray-900">{user.email?.split('@')[0]}</span>
-                 <span className="text-[10px] text-gray-400 uppercase font-semibold tracking-tighter">Administrator</span>
-               </div>
-               <div className="w-10 h-10 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center text-primary font-bold shadow-sm">
-                 {user.email?.[0].toUpperCase()}
+             </div>
+            <div className="flex items-center space-x-6">
+               <LanguageSwitcher />
+               <div className="flex items-center space-x-4 border-l border-gray-200 pl-6">
+                 <div className="flex flex-col items-end mr-2 text-right hidden sm:flex">
+                   <span className="text-sm font-bold text-gray-900">{user.email?.split('@')[0]}</span>
+                   <span className="text-[10px] text-gray-400 uppercase font-semibold tracking-tighter">Administrator</span>
+                 </div>
+                 <div className="w-10 h-10 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center text-primary font-bold shadow-sm">
+                   {user.email?.[0].toUpperCase()}
+                 </div>
                </div>
             </div>
           </header>
