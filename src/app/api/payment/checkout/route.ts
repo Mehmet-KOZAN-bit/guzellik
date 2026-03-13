@@ -85,7 +85,8 @@ export async function POST(req: Request) {
         {
           id: service,
           name: `Deposit for ${service}`,
-          category1: 'Beauty Service',
+          category1: 'Beauty',
+          category2: service.charAt(0).toUpperCase() + service.slice(1),
           itemType: 'VIRTUAL',
           price: depositAmount.toString()
         }

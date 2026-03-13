@@ -40,9 +40,9 @@ export interface IyzicoRequest {
     id: string;
     name: string;
     category1: string;
+    category2: string;
     itemType: string;
     price: string;
-    paidPrice?: string;
   }[];
 }
 
@@ -76,7 +76,7 @@ export async function initializeCheckoutForm(request: any) {
       // User suggested this specific identity number for sandbox
       identityNumber: '74300864791', 
       registrationAddress: request.buyer.registrationAddress,
-      ip: request.buyer.ip || '127.0.0.1',
+      ip: '127.0.0.1', // Safer for sandbox/local testing
       city: request.buyer.city,
       country: request.buyer.country,
       zipCode: request.buyer.zipCode
@@ -86,10 +86,10 @@ export async function initializeCheckoutForm(request: any) {
     basketItems: request.basketItems.map((item: any) => ({
       id: item.id,
       name: item.name,
-      category1: item.category1,
+      category1: item.category1 || 'Beauty',
+      category2: item.category2 || 'Service',
       itemType: item.itemType || 'VIRTUAL',
       price: formatIyzPrice(item.price),
-      paidPrice: formatIyzPrice(item.price) // Usually the same
     }))
   };
 
