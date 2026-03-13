@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/context/LanguageContext";
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -39,6 +40,7 @@ export default function AdminLayout({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!auth) {
@@ -121,6 +123,15 @@ export default function AdminLayout({
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
               const Icon = item.icon;
+              const itemNameMap: Record<string, string> = {
+                'Dashboard': t.admin.sidebar.dashboard,
+                'Appointments': t.admin.sidebar.appointments,
+                'Customers': t.admin.sidebar.customers,
+                'Services': t.admin.sidebar.services,
+                'Gallery': t.admin.sidebar.gallery,
+                'Settings': t.admin.sidebar.settings,
+              };
+              const translatedName = itemNameMap[item.name] || item.name;
 
               return (
                 <Link
@@ -141,7 +152,7 @@ export default function AdminLayout({
                         exit={{ opacity: 0, x: -5 }}
                         className="text-sm whitespace-nowrap"
                       >
-                        {item.name}
+                        {translatedName}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -164,14 +175,14 @@ export default function AdminLayout({
               className={`flex items-center space-x-3 px-3 py-3 rounded-xl text-secondary/50 hover:bg-white/5 hover:text-white transition-all`}
             >
               <ExternalLink size={20} className="shrink-0" />
-              {!isCollapsed && <span className="text-sm font-medium">View Website</span>}
+              {!isCollapsed && <span className="text-sm font-medium">{t.admin.sidebar.viewWebsite}</span>}
             </Link>
             <button
               onClick={handleLogout}
               className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-red-400/70 hover:bg-red-500/10 hover:text-red-400 transition-all`}
             >
               <LogOut size={20} className="shrink-0" />
-              {!isCollapsed && <span className="text-sm font-medium">Log out</span>}
+              {!isCollapsed && <span className="text-sm font-medium">{t.admin.sidebar.logout}</span>}
             </button>
           </div>
         </motion.aside>
@@ -191,7 +202,7 @@ export default function AdminLayout({
                <div className="flex items-center space-x-4 border-l border-gray-200 pl-6">
                  <div className="flex flex-col items-end mr-2 text-right hidden sm:flex">
                    <span className="text-sm font-bold text-gray-900">{user.email?.split('@')[0]}</span>
-                   <span className="text-[10px] text-gray-400 uppercase font-semibold tracking-tighter">Administrator</span>
+                   <span className="text-[10px] text-gray-400 uppercase font-semibold tracking-tighter">{t.admin.header.administrator}</span>
                  </div>
                  <div className="w-10 h-10 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center text-primary font-bold shadow-sm">
                    {user.email?.[0].toUpperCase()}

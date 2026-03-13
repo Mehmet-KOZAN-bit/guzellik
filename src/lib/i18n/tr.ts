@@ -81,5 +81,51 @@ export const tr = {
     phone: "Telefon",
     email: "E-posta",
     social: "Sosyal Medya ve Hızlı Erişim",
+  },
+  admin: {
+    sidebar: {
+      dashboard: "Gösterge Paneli",
+      appointments: "Randevular",
+      customers: "Müşteriler",
+      services: "Hizmetler",
+      gallery: "Galeri",
+      settings: "Ayarlar",
+      viewWebsite: "Siteyi Görüntüle",
+      logout: "Çıkış Yap"
+    },
+    header: {
+      administrator: "Yönetici"
+    },
+    common: {
+      cancel: "İptal",
+      delete: "Sil",
+      save: "Kaydet",
+      confirm: "Onayla",
+      actions: "İşlemler",
+      status: "Durum"
+    },
+    appointments: {
+      title: "Randevular",
+      subtitle: "Tüm salon rezervasyonlarını yönetin ve izleyin.",
+      all: "Tümü",
+      pending: "Bekleyen",
+      approved: "Onaylandı",
+      confirmed: "Kesinleşti",
+      cancelled: "İptal Edildi",
+      customer: "Müşteri",
+      service: "Hizmet",
+      schedule: "Plan",
+      paymentDetails: "Ödeme Detayları",
+      noAppointments: "Kriterlerinize uygun randevu bulunamadı.",
+      paid: "Ödendi",
+      total: "Toplam",
+      noDeposit: "Kapora Yok",
+      paymentConfirmed: "Ödeme Onaylandı",
+      paymentFailed: "Ödeme Başarısız",
+      refunded: "İade Edildi",
+      refundBtn: "İade Et",
+      cancelBtn: "Randevuyu İptal Et",
+      whatsappBtn: "WhatsApp ile Bildir"
+    }
   }
 };

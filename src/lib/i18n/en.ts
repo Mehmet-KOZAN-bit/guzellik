@@ -81,5 +81,51 @@ export const en = {
     phone: "Phone",
     email: "Email",
     social: "Social & Quick Connect",
+  },
+  admin: {
+    sidebar: {
+      dashboard: "Dashboard",
+      appointments: "Appointments",
+      customers: "Customers",
+      services: "Services",
+      gallery: "Gallery",
+      settings: "Settings",
+      viewWebsite: "View Website",
+      logout: "Log out"
+    },
+    header: {
+      administrator: "Administrator"
+    },
+    common: {
+      cancel: "Cancel",
+      delete: "Delete",
+      save: "Save",
+      confirm: "Confirm",
+      actions: "Actions",
+      status: "Status"
+    },
+    appointments: {
+      title: "Appointments",
+      subtitle: "Manage and monitor all salon bookings.",
+      all: "All",
+      pending: "Pending",
+      approved: "Approved",
+      confirmed: "Confirmed",
+      cancelled: "Cancelled",
+      customer: "Customer",
+      service: "Service",
+      schedule: "Schedule",
+      paymentDetails: "Payment Details",
+      noAppointments: "No appointments found matching your criteria.",
+      paid: "Paid",
+      total: "Total",
+      noDeposit: "No Deposit",
+      paymentConfirmed: "Payment Confirmed",
+      paymentFailed: "Payment Failed",
+      refunded: "Refunded",
+      refundBtn: "Refund",
+      cancelBtn: "Cancel Booking",
+      whatsappBtn: "Notify via WhatsApp"
+    }
   }
 };
