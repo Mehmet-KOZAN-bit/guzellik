@@ -105,12 +105,18 @@ export default function ServicesPage() {
         </div>
 
         {/* Services Grid */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-        >
+        {services.length === 0 ? (
+          <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+            <p className="text-gray-400 font-medium">Henüz hizmet eklenmemiş veya veri yüklenemedi.</p>
+            <p className="text-xs text-gray-300 mt-2">Lütfen Vercel Environment Variables ayarlarını kontrol edin.</p>
+          </div>
+        ) : (
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+          >
           {services.map((service) => {
             const Icon = ICON_MAP[service.id] || Scissors;
             const name = language === 'tr' ? service.nameTr : service.name;
@@ -183,8 +189,8 @@ export default function ServicesPage() {
               </motion.div>
             );
           })}
-        </motion.div>
-
+          </motion.div>
+        )}
       </div>
     </div>
   );

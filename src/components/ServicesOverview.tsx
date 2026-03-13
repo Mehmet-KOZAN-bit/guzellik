@@ -60,7 +60,7 @@ export default function ServicesOverview() {
     return () => clearInterval(timer);
   }, [current, goTo, services.length]);
 
-  if (loading || services.length === 0) {
+  if (loading) {
     return (
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -69,6 +69,8 @@ export default function ServicesOverview() {
       </section>
     );
   }
+
+  if (services.length === 0) return null;
 
   const slide = services[current];
   const name = language === 'tr' ? slide.nameTr : slide.name;

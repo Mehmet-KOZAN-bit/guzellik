@@ -13,6 +13,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only if config is provided to avoid crashing
+if (!firebaseConfig.apiKey && typeof window !== 'undefined') {
+  console.warn("Firebase API Key is missing. Check your .env or Vercel Environment Variables.");
+}
+
 const app = getApps().length > 0 
   ? getApp() 
   : (firebaseConfig.apiKey ? initializeApp(firebaseConfig) : null);
