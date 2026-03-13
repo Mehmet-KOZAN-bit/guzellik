@@ -40,6 +40,11 @@ export default function AppointmentsPage() {
     message: "",
     type: "info",
   });
+  const [refundPrompt, setRefundPrompt] = useState<{
+    isOpen: boolean;
+    appt: Appointment | null;
+    reason: string;
+  }>({ isOpen: false, appt: null, reason: "" });
 
   useEffect(() => {
     if (!db) {
@@ -96,40 +101,54 @@ export default function AppointmentsPage() {
     window.open(url, "_blank");
   };
 
-  const handleRefund = async (appt: Appointment) => {
-    setModal({
-      isOpen: true,
-      title: "Ücret İadesi (Refund)",
-      message: `${appt.name} adlı müşterinin ${appt.depositAmount} ₺ tutarındaki ödemesini iade etmek ve randevuyu iptal etmek istediğinize emin misiniz? (Gün içi işlemlerde kesintisiz iptal olur)`,
-      type: "confirm",
-      onConfirm: async () => {
-        try {
-          const res = await fetch("/api/payment/refund", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ appointmentId: appt.id }),
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            setModal({
-              isOpen: true,
-              title: "İade Başarısız",
-              message: data.error || "İade işlemi sırasında bir hata oluştu.",
-              type: "error",
-            });
-          } else {
-            setModal({
-              isOpen: true,
-              title: "İade Başarılı",
-              message: "Ödeme başarıyla iade edildi ve randevu iptal edildi.",
-              type: "success",
-            });
-          }
-        } catch (error) {
-          console.error("Refund error:", error);
-        }
+  const handleRefundClick = (appt: Appointment) => {
+    setRefundPrompt({ isOpen: true, appt, reason: "" });
+  };
+
+  const executeRefund = async () => {
+    const { appt, reason } = refundPrompt;
+    if (!appt) return;
+
+    setRefundPrompt({ ...refundPrompt, isOpen: false });
+
+    try {
+      const res = await fetch("/api/payment/refund", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ appointmentId: appt.id }),
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setModal({
+          isOpen: true,
+          title: "İade Başarısız",
+          message: data.error || "İade işlemi sırasında bir hata oluştu.",
+          type: "error",
+        });
+      } else {
+        // Build WhatsApp Message
+        let phone = appt.phone.replace(/\D/g, "");
+        if (phone.startsWith("0")) phone = "90" + phone.slice(1);
+        else if (!phone.startsWith("90")) phone = "90" + phone;
+
+        const reasonText = reason.trim() ? `\n\nİptal Nedeni: ${reason.trim()}` : "";
+        const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz iptal edilmiş ve ${appt.depositAmount} ₺ tutarındaki ön ödemeniz kartınıza iade edilmiştir.${reasonText}\n\nSağlıklı günler dileriz,\nGlowLuxe`;
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+        
+        // Open WhatsApp immediately
+        window.open(url, "_blank");
+
+        setModal({
+          isOpen: true,
+          title: "İade Başarılı",
+          message: "Ödeme iade edildi, randevu iptal edildi ve WhatsApp mesaj ekranı açıldı.",
+          type: "success",
+        });
       }
-    });
+    } catch (error) {
+      console.error("Refund error:", error);
+    }
   };
 
   const filteredAppointments = filter === "all" 
@@ -291,7 +310,7 @@ export default function AppointmentsPage() {
                         )}
                         {appt.paymentStatus === "paid" && appt.status !== "cancelled" && (
                           <button
-                            onClick={() => handleRefund(appt)}
+                            onClick={() => handleRefundClick(appt)}
                             className="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white rounded-xl transition-all shadow-sm"
                             title="İade Et (Refund)"
                           >
@@ -331,6 +350,69 @@ export default function AppointmentsPage() {
         confirmText="Sil"
         cancelText="İptal"
       />
+
+      {/* Custom Refund Prompt Modal */}
+      <AnimatePresence>
+        {refundPrompt.isOpen && refundPrompt.appt && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setRefundPrompt({ ...refundPrompt, isOpen: false })}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden p-8"
+            >
+              <div className="flex justify-center mb-6">
+                <div className="p-4 bg-indigo-50 rounded-2xl text-indigo-500">
+                  <RefreshCcw size={40} />
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-black text-center text-gray-900 mb-2 uppercase tracking-tight">
+                Ücret İadesi (Refund)
+              </h3>
+              
+              <p className="text-gray-500 font-medium text-center text-sm leading-relaxed mb-6">
+                <strong>{refundPrompt.appt.name}</strong> adlı müşterinin <strong>{refundPrompt.appt.depositAmount} ₺</strong> tutarındaki ödemesini iade etmek ve randevuyu iptal etmek üzeresiniz.
+              </p>
+
+              <div className="mb-8">
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                  İptal Nedeni (Müşteriye Gönderilecek)
+                </label>
+                <textarea
+                  value={refundPrompt.reason}
+                  onChange={(e) => setRefundPrompt({ ...refundPrompt, reason: e.target.value })}
+                  placeholder="Örn: Personel rahatsızlığı nedeniyle..."
+                  className="w-full border-2 border-gray-100 rounded-2xl p-4 text-sm focus:border-indigo-500 focus:ring-0 transition-colors resize-none h-24"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setRefundPrompt({ ...refundPrompt, isOpen: false })}
+                  className="flex-1 py-4 bg-gray-100 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all active:scale-95"
+                >
+                  Vazgeç
+                </button>
+                <button
+                  onClick={executeRefund}
+                  className="flex-1 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition-all active:scale-95"
+                >
+                  Onayla ve İade Et
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
