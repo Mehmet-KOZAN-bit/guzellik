@@ -3,20 +3,49 @@ import crypto from 'crypto';
 export interface IyzicoRequest {
   locale: string;
   conversationId: string;
-  price: string;
-  paidPrice: string;
+  price: number;
+  paidPrice: number;
   currency: string;
   basketId: string;
   paymentGroup: string;
   callbackUrl: string;
-  enabledInstallments?: number[];
-  buyer: any;
-  shippingAddress: any;
-  billingAddress: any;
-  basketItems: any[];
+  buyer: {
+    id: string;
+    name: string;
+    surname: string;
+    gsmNumber: string;
+    email: string;
+    identityNumber: string;
+    registrationAddress: string;
+    ip: string;
+    city: string;
+    country: string;
+    zipCode: string;
+  };
+  shippingAddress: {
+    contactName: string;
+    city: string;
+    country: string;
+    address: string;
+    zipCode: string;
+  };
+  billingAddress: {
+    contactName: string;
+    city: string;
+    country: string;
+    address: string;
+    zipCode: string;
+  };
+  basketItems: {
+    id: string;
+    name: string;
+    category1: string;
+    itemType: string;
+    price: number;
+  }[];
 }
 
-export async function initializeCheckoutForm(request: IyzicoRequest) {
+export async function initializeCheckoutForm(request: any) {
   const apiKey = (process.env.IYZICO_API_KEY || "").trim();
   const secretKey = (process.env.IYZICO_SECRET_KEY || "").trim();
   const baseUrl = (process.env.IYZICO_BASE_URL || "").trim() || 'https://sandbox-api.iyzipay.com';
@@ -25,41 +54,43 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
     throw new Error('Iyzico API keys are missing in environment variables');
   }
 
-  // 1. Strict Formatting for Iyzico V2 Sandbox
-  
-  // Prices MUST be strings with exactly 1 decimal digit (e.g., "150.0")
-  const formatIyzicoPrice = (p: any) => {
-    return parseFloat(p).toFixed(1);
+  // 1. Final Refinement of Request Body
+  const cleanRequest = {
+    locale: request.locale || 'tr',
+    conversationId: request.conversationId,
+    price: Number(parseFloat(request.price.toString()).toFixed(2)),
+    paidPrice: Number(parseFloat(request.paidPrice.toString()).toFixed(2)),
+    currency: request.currency || 'TRY',
+    basketId: request.basketId,
+    paymentGroup: 'PRODUCT',
+    callbackUrl: request.callbackUrl.split('?')[0], // Remove query params to be safe
+    buyer: {
+      id: request.buyer.id,
+      name: request.buyer.name,
+      surname: request.buyer.surname,
+      gsmNumber: request.buyer.gsmNumber.startsWith('+') ? request.buyer.gsmNumber : ('+90' + request.buyer.gsmNumber.replace(/\D/g, '').replace(/^90/, '').replace(/^0/, '')),
+      email: request.buyer.email,
+      identityNumber: request.buyer.identityNumber || '11111111111',
+      registrationAddress: request.buyer.registrationAddress,
+      ip: request.buyer.ip || '127.0.0.1',
+      city: request.buyer.city,
+      country: request.buyer.country,
+      zipCode: request.buyer.zipCode
+    },
+    shippingAddress: request.shippingAddress,
+    billingAddress: request.billingAddress,
+    basketItems: request.basketItems.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      category1: item.category1,
+      itemType: item.itemType || 'VIRTUAL',
+      price: Number(parseFloat(item.price.toString()).toFixed(2)),
+      paidPrice: Number(parseFloat(item.price.toString()).toFixed(2))
+    }))
   };
 
-  request.price = formatIyzicoPrice(request.price);
-  request.paidPrice = formatIyzicoPrice(request.paidPrice);
-  
-  request.basketItems = request.basketItems.map(item => ({
-    ...item,
-    price: formatIyzicoPrice(item.price),
-    paidPrice: formatIyzicoPrice(item.price), // Mandatory for items
-    itemType: item.itemType || 'VIRTUAL',
-    category2: item.category1 // Sometimes required
-  }));
-
-  // Enabled installments can cause "Invalid Request" in sandbox if wrong
-  delete request.enabledInstallments;
-  
-  // Revert to PRODUCT (Listing is sometimes only for specific sub-merchants)
-  request.paymentGroup = 'PRODUCT';
-
-  // Ensure buyer GSM is clean
-  if (request.buyer.gsmNumber) {
-    const cleanPhone = request.buyer.gsmNumber.replace(/\D/g, '');
-    request.buyer.gsmNumber = '+' + (cleanPhone.startsWith('90') ? cleanPhone : '90' + (cleanPhone.startsWith('0') ? cleanPhone.substring(1) : cleanPhone));
-  }
-
-  // Identity number must be 11 digits
-  request.buyer.identityNumber = request.buyer.identityNumber || '11111111111';
-
-  const rnd = crypto.randomBytes(10).toString('hex');
-  const payload = JSON.stringify(request);
+  const rnd = crypto.randomBytes(8).toString('hex');
+  const payload = JSON.stringify(cleanRequest);
   
   // Iyzico V2 Auth Generation
   const hashStr = apiKey + rnd + secretKey + payload;
@@ -84,7 +115,8 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
   const data = await response.json();
 
   if (data.status !== 'success') {
-    console.error("Iyzico Error Response:", JSON.stringify(data));
+    console.error("DEBUG: Iyzico Failure Payload:", payload);
+    console.error("DEBUG: Iyzico Failure Response:", JSON.stringify(data));
     throw new Error(`${data.errorMessage} (Code: ${data.errorCode})`);
   }
 
@@ -96,11 +128,7 @@ export async function retrieveCheckoutForm(token: string) {
   const secretKey = (process.env.IYZICO_SECRET_KEY || "").trim();
   const baseUrl = (process.env.IYZICO_BASE_URL || "").trim() || 'https://sandbox-api.iyzipay.com';
 
-  if (!apiKey || !secretKey) {
-    throw new Error('Iyzico API keys are missing');
-  }
-
-  const rnd = crypto.randomBytes(10).toString('hex');
+  const rnd = crypto.randomBytes(8).toString('hex');
   const requestBody = {
     locale: 'tr',
     conversationId: rnd,

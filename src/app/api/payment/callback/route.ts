@@ -7,31 +7,31 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const token = formData.get('token');
+    if (!token) {
+      return NextResponse.json({ error: 'Missing token' }, { status: 400 });
+    }
 
     const url = new URL(req.url);
     const appointmentId = url.searchParams.get('id');
 
-    if (!token || !appointmentId) {
-      return NextResponse.json({ error: 'Missing token or appointment id' }, { status: 400 });
-    }
-
-    if (!db) {
-       return NextResponse.json({ error: 'Database not initialized' }, { status: 500 });
-    }
-
     // Retrieve the payment result from iyzico manually
     const result = await retrieveCheckoutForm(token.toString());
 
-    if (result.status !== 'success' || result.paymentStatus !== 'SUCCESS') {
-      console.error("Iyzico Callback error or failed payment:", result.errorMessage);
+    // Fallback: get appointmentId from conversationId if not in URL
+    const finalAppointmentId = appointmentId || result.conversationId;
+
+    if (!finalAppointmentId || result.status !== 'success' || result.paymentStatus !== 'SUCCESS') {
+      console.error("Iyzico Callback error or failed payment:", result.errorMessage, "AppID:", finalAppointmentId);
       
-      try {
-        await updateDoc(doc(db!, 'appointments', appointmentId), {
-          status: 'cancelled',
-          paymentStatus: 'failed',
-        });
-      } catch (dbErr) {
-        console.error("Firebase update error on failed callback:", dbErr);
+      if (finalAppointmentId) {
+        try {
+          await updateDoc(doc(db!, 'appointments', finalAppointmentId), {
+            status: 'cancelled',
+            paymentStatus: 'failed',
+          });
+        } catch (dbErr) {
+          console.error("Firebase update error on failed callback:", dbErr);
+        }
       }
 
       // Redirect to booking page with failure
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     };
 
     try {
-      await updateDoc(doc(db!, 'appointments', appointmentId), updateData);
+      await updateDoc(doc(db!, 'appointments', finalAppointmentId), updateData);
     } catch (dbErr) {
       console.error("Firebase update error on callback success:", dbErr);
     }
