@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Check, X, Trash2, Clock, Calendar, Mail, Phone, ExternalLink } from "lucide-react";
+import { Check, X, Trash2, Clock, Calendar, Mail, Phone, ExternalLink, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/Modal";
 
@@ -84,6 +84,16 @@ export default function AppointmentsPage() {
         }
       }
     });
+  };
+
+  const handleWhatsApp = (appt: Appointment) => {
+    let phone = appt.phone.replace(/\D/g, "");
+    if (phone.startsWith("0")) phone = "90" + phone.slice(1);
+    else if (!phone.startsWith("90")) phone = "90" + phone;
+
+    const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz başarıyla oluşturulmuştur.\n\nGlowLuxe'ü tercih ettiğiniz için teşekkür ederiz!`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank");
   };
 
   const filteredAppointments = filter === "all" 
@@ -239,6 +249,13 @@ export default function AppointmentsPage() {
                             </button>
                           </>
                         )}
+                        <button
+                          onClick={() => handleWhatsApp(appt)}
+                          className="p-2 text-green-600 bg-green-50 hover:bg-green-600 hover:text-white rounded-xl transition-all shadow-sm"
+                          title="WhatsApp ile Bildir"
+                        >
+                          <MessageCircle size={16} />
+                        </button>
                         <button
                           onClick={() => handleDelete(appt.id)}
                           className="p-2 text-gray-400 bg-gray-50 hover:bg-rose-500 hover:text-white rounded-xl transition-all shadow-sm"
