@@ -3,50 +3,17 @@ import crypto from 'crypto';
 export interface IyzicoRequest {
   locale: string;
   conversationId: string;
-  price: number | string;
-  paidPrice: number | string;
+  price: string;
+  paidPrice: string;
   currency: string;
   basketId: string;
   paymentGroup: string;
   callbackUrl: string;
   enabledInstallments?: number[];
-  buyer: {
-    id: string;
-    name: string;
-    surname: string;
-    gsmNumber: string;
-    email: string;
-    identityNumber: string;
-    lastLoginDate?: string;
-    registrationDate?: string;
-    registrationAddress: string;
-    ip: string;
-    city: string;
-    country: string;
-    zipCode: string;
-  };
-  shippingAddress: {
-    contactName: string;
-    city: string;
-    country: string;
-    address: string;
-    zipCode: string;
-  };
-  billingAddress: {
-    contactName: string;
-    city: string;
-    country: string;
-    address: string;
-    zipCode: string;
-  };
-  basketItems: {
-    id: string;
-    name: string;
-    category1: string;
-    itemType: string;
-    price: number | string;
-    paidPrice?: number | string;
-  }[];
+  buyer: any;
+  shippingAddress: any;
+  billingAddress: any;
+  basketItems: any[];
 }
 
 export async function initializeCheckoutForm(request: IyzicoRequest) {
@@ -58,40 +25,40 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
     throw new Error('Iyzico API keys are missing in environment variables');
   }
 
-  // 1. Refine Data for Strict V2 API Requirements
+  // 1. Strict Formatting for Iyzico V2 Sandbox
   
-  // Format GSM Number: ensure +90 and no spaces
-  if (request.buyer.gsmNumber) {
-    const cleanPhone = request.buyer.gsmNumber.replace(/\D/g, '');
-    let formatted = cleanPhone;
-    if (cleanPhone.startsWith('90')) formatted = cleanPhone;
-    else if (cleanPhone.startsWith('0')) formatted = '90' + cleanPhone.substring(1);
-    else formatted = '90' + cleanPhone;
-    request.buyer.gsmNumber = '+' + formatted;
-  }
+  // Prices MUST be strings with exactly 1 decimal digit (e.g., "150.0")
+  const formatIyzicoPrice = (p: any) => {
+    return parseFloat(p).toFixed(1);
+  };
 
-  // Convert Prices to Numbers (Iyzico V2 prefers Number types in JSON)
-  const toNum = (p: any) => parseFloat(parseFloat(p).toFixed(2));
-  
-  request.price = toNum(request.price);
-  request.paidPrice = toNum(request.paidPrice);
+  request.price = formatIyzicoPrice(request.price);
+  request.paidPrice = formatIyzicoPrice(request.paidPrice);
   
   request.basketItems = request.basketItems.map(item => ({
     ...item,
-    price: toNum(item.price),
-    paidPrice: toNum(item.price), // Usually equals price for e-commerce
-    itemType: item.itemType || 'VIRTUAL'
+    price: formatIyzicoPrice(item.price),
+    paidPrice: formatIyzicoPrice(item.price), // Mandatory for items
+    itemType: item.itemType || 'VIRTUAL',
+    category2: item.category1 // Sometimes required
   }));
 
-  // Set Payment Group for Services
-  request.paymentGroup = 'LISTING';
+  // Enabled installments can cause "Invalid Request" in sandbox if wrong
+  delete request.enabledInstallments;
   
-  // Clean optional fields that might have weird formatting
-  delete request.buyer.registrationDate;
-  delete request.buyer.lastLoginDate;
+  // Revert to PRODUCT (Listing is sometimes only for specific sub-merchants)
+  request.paymentGroup = 'PRODUCT';
 
-  // Use a longer random string forrnd
-  const rnd = crypto.randomBytes(12).toString('hex');
+  // Ensure buyer GSM is clean
+  if (request.buyer.gsmNumber) {
+    const cleanPhone = request.buyer.gsmNumber.replace(/\D/g, '');
+    request.buyer.gsmNumber = '+' + (cleanPhone.startsWith('90') ? cleanPhone : '90' + (cleanPhone.startsWith('0') ? cleanPhone.substring(1) : cleanPhone));
+  }
+
+  // Identity number must be 11 digits
+  request.buyer.identityNumber = request.buyer.identityNumber || '11111111111';
+
+  const rnd = crypto.randomBytes(10).toString('hex');
   const payload = JSON.stringify(request);
   
   // Iyzico V2 Auth Generation
@@ -103,8 +70,6 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
     .digest('hex');
 
   const authorization = Buffer.from(`${apiKey}:${signature}`).toString('base64');
-
-  console.log(`DEBUG: Initializing Iyzico V2 - ConvID: ${request.conversationId}`);
 
   const response = await fetch(`${baseUrl}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
     method: 'POST',
@@ -119,7 +84,7 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
   const data = await response.json();
 
   if (data.status !== 'success') {
-    console.error("Iyzico Error Details:", JSON.stringify(data));
+    console.error("Iyzico Error Response:", JSON.stringify(data));
     throw new Error(`${data.errorMessage} (Code: ${data.errorCode})`);
   }
 
@@ -135,7 +100,7 @@ export async function retrieveCheckoutForm(token: string) {
     throw new Error('Iyzico API keys are missing');
   }
 
-  const rnd = crypto.randomBytes(12).toString('hex');
+  const rnd = crypto.randomBytes(10).toString('hex');
   const requestBody = {
     locale: 'tr',
     conversationId: rnd,
