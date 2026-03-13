@@ -8,6 +8,7 @@ export interface IyzicoRequest {
   currency: string;
   basketId: string;
   paymentGroup: string;
+  enabledInstallments?: number[];
   callbackUrl: string;
   buyer: {
     id: string;
@@ -66,6 +67,7 @@ export async function initializeCheckoutForm(request: any) {
     currency: request.currency || 'TRY',
     basketId: request.basketId,
     paymentGroup: 'PRODUCT',
+    enabledInstallments: request.enabledInstallments || [1],
     callbackUrl: request.callbackUrl.split('?')[0], // Base URL without query params
     buyer: {
       id: request.buyer.id,
@@ -76,7 +78,7 @@ export async function initializeCheckoutForm(request: any) {
       // User suggested this specific identity number for sandbox
       identityNumber: '74300864791', 
       registrationAddress: request.buyer.registrationAddress,
-      ip: '127.0.0.1', // Safer for sandbox/local testing
+      ip: '85.34.78.112', // Valid IP required by Iyzico sandbox
       city: request.buyer.city,
       country: request.buyer.country,
       zipCode: request.buyer.zipCode

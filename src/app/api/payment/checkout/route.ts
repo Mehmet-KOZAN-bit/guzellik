@@ -28,10 +28,10 @@ export async function POST(req: Request) {
 
     // Normalize phone for Iyzico (+90...)
     const cleanPhone = phone.replace(/\D/g, '');
-    const formattedPhone = cleanPhone.startsWith('90') 
-      ? `+${cleanPhone}` 
-      : cleanPhone.startsWith('0') 
-        ? `+90${cleanPhone.slice(1)}` 
+    const formattedPhone = cleanPhone.startsWith('90')
+      ? `+${cleanPhone}`
+      : cleanPhone.startsWith('0')
+        ? `+90${cleanPhone.slice(1)}`
         : `+90${cleanPhone}`;
 
     // 1. Create a pending appointment in Firestore FIRST
@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       currency: 'TRY',
       basketId: `B-${appointmentId}`,
       paymentGroup: 'PRODUCT',
+      enabledInstallments: [1],
       callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/payment/callback?id=${appointmentId}`,
       buyer: {
         id: `BY-${Date.now()}`,
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
         email: email,
         identityNumber: '74300864791', // Strict sandbox identity
         registrationAddress: 'Ortakoy, Istanbul',
-        ip: '127.0.0.1', // Safe for sandbox
+        ip: '85.34.78.112', // Valid IP required by Iyzico sandbox
         city: 'Istanbul',
         country: 'Turkey',
         zipCode: '34347'
@@ -96,7 +97,7 @@ export async function POST(req: Request) {
           id: service,
           name: `Deposit for ${service}`,
           category1: 'Beauty',
-          category2: service.charAt(0).toUpperCase() + service.slice(1),
+          category2: 'Service',
           itemType: 'VIRTUAL',
           price: depositAmount.toFixed(2)
         }
@@ -106,8 +107,8 @@ export async function POST(req: Request) {
     const result = await initializeCheckoutForm(request as any);
 
     // Return the payment page URL to redirect the user
-    return NextResponse.json({ 
-      paymentPageUrl: result.paymentPageUrl + '&iframe=false' 
+    return NextResponse.json({
+      paymentPageUrl: result.paymentPageUrl + '&iframe=false'
     });
 
   } catch (error) {
