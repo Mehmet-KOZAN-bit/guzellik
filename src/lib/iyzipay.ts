@@ -31,8 +31,12 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
     request.buyer.gsmNumber = `+90${cleanPhone.startsWith('90') ? cleanPhone.substring(2) : (cleanPhone.startsWith('0') ? cleanPhone.substring(1) : cleanPhone)}`;
   }
 
-  // Ensure prices are formatted as strings with one decimal place if whole
-  const formatPrice = (p: any) => parseFloat(p).toFixed(1);
+  // Ensure prices are formatted correctly: no trailing .0 if integer, otherwise 2 decimals
+  const formatPrice = (p: any) => {
+    const val = parseFloat(p);
+    return Number.isInteger(val) ? val.toString() : val.toFixed(2);
+  };
+  
   request.price = formatPrice(request.price);
   request.paidPrice = formatPrice(request.paidPrice);
   request.basketItems = request.basketItems.map(item => ({
@@ -45,12 +49,16 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
   
   // Iyzico V2 Auth Generation
   const hashStr = apiKey + rnd + secretKey + payload;
+  console.log("DEBUG: Iyzico Auth String Prefix:", hashStr.substring(0, 30));
+  
   const signature = crypto
     .createHmac('sha256', secretKey)
     .update(hashStr)
     .digest('hex');
 
   const authorization = Buffer.from(`${apiKey}:${signature}`).toString('base64');
+
+  console.log("DEBUG: Iyzico Request Payload:", payload);
 
   const response = await fetch(`${baseUrl}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
     method: 'POST',
@@ -63,9 +71,10 @@ export async function initializeCheckoutForm(request: IyzicoRequest) {
   });
 
   const data = await response.json();
+  console.log("DEBUG: Iyzico Response Data:", JSON.stringify(data));
 
   if (data.status !== 'success') {
-    throw new Error(data.errorMessage || 'Iyzico initialization failed');
+    throw new Error(`${data.errorMessage} (Code: ${data.errorCode})`);
   }
 
   return data;
