@@ -3,8 +3,8 @@ import crypto from 'crypto';
 export interface IyzicoRequest {
   locale: string;
   conversationId: string;
-  price: number;
-  paidPrice: number;
+  price: string;
+  paidPrice: string;
   currency: string;
   basketId: string;
   paymentGroup: string;
@@ -41,7 +41,8 @@ export interface IyzicoRequest {
     name: string;
     category1: string;
     itemType: string;
-    price: number;
+    price: string;
+    paidPrice?: string;
   }[];
 }
 
@@ -54,23 +55,26 @@ export async function initializeCheckoutForm(request: any) {
     throw new Error('Iyzico API keys are missing in environment variables');
   }
 
-  // 1. Final Refinement of Request Body
+  // 1. Strict Formatting for Iyzico V2 (User requested string format with 2 decimals)
+  const formatIyzPrice = (p: any) => parseFloat(p.toString()).toFixed(2);
+
   const cleanRequest = {
     locale: request.locale || 'tr',
     conversationId: request.conversationId,
-    price: Number(parseFloat(request.price.toString()).toFixed(2)),
-    paidPrice: Number(parseFloat(request.paidPrice.toString()).toFixed(2)),
+    price: formatIyzPrice(request.price),
+    paidPrice: formatIyzPrice(request.paidPrice),
     currency: request.currency || 'TRY',
     basketId: request.basketId,
     paymentGroup: 'PRODUCT',
-    callbackUrl: request.callbackUrl.split('?')[0], // Remove query params to be safe
+    callbackUrl: request.callbackUrl.split('?')[0], // Base URL without query params
     buyer: {
       id: request.buyer.id,
       name: request.buyer.name,
       surname: request.buyer.surname,
       gsmNumber: request.buyer.gsmNumber.startsWith('+') ? request.buyer.gsmNumber : ('+90' + request.buyer.gsmNumber.replace(/\D/g, '').replace(/^90/, '').replace(/^0/, '')),
       email: request.buyer.email,
-      identityNumber: request.buyer.identityNumber || '11111111111',
+      // User suggested this specific identity number for sandbox
+      identityNumber: '74300864791', 
       registrationAddress: request.buyer.registrationAddress,
       ip: request.buyer.ip || '127.0.0.1',
       city: request.buyer.city,
@@ -84,8 +88,8 @@ export async function initializeCheckoutForm(request: any) {
       name: item.name,
       category1: item.category1,
       itemType: item.itemType || 'VIRTUAL',
-      price: Number(parseFloat(item.price.toString()).toFixed(2)),
-      paidPrice: Number(parseFloat(item.price.toString()).toFixed(2))
+      price: formatIyzPrice(item.price),
+      paidPrice: formatIyzPrice(item.price) // Usually the same
     }))
   };
 
