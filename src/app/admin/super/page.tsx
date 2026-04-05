@@ -30,7 +30,7 @@ export default function SuperAdminBranding() {
     secondaryColor: "#D4AF37",
     accentColor: "#FFFDD0",
     logoUrl: "",
-    siteName: "GlowLuxe",
+    siteName: "The Beauty Side",
   });
   
   const [notes, setNotes] = useState<CustomerNote[]>([]);

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { collection, query, orderBy, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Scissors, Edit2, Save, X, Plus, Image as ImageIcon } from "lucide-react";
+import { Scissors, Edit2, Save, X, Plus, Image as ImageIcon, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -74,6 +74,17 @@ export default function ServicesCMS() {
       setEditingId(null);
     } catch (error) {
       console.error("Error updating service:", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!db) return;
+    if (!window.confirm(t.admin.servicesPage.deleteConfirm || "Bu hizmeti silmek istediğinizden emin misiniz?")) return;
+    
+    try {
+      await deleteDoc(doc(db, "services", id));
+    } catch (error) {
+      console.error("Error deleting service:", error);
     }
   };
 
@@ -323,13 +334,22 @@ export default function ServicesCMS() {
                       </button>
                     </>
                   ) : (
-                    <button 
-                      onClick={() => handleEdit(service)}
-                      className="flex items-center space-x-2 px-4 py-2 bg-primary/5 text-primary hover:bg-primary hover:text-secondary rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300"
-                    >
-                      <Edit2 size={14} />
-                      <span>{t.admin.servicesPage.editInfo}</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => handleDelete(service.id)}
+                        className="p-2 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+                        title={t.admin.common.delete}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                      <button 
+                        onClick={() => handleEdit(service)}
+                        className="flex items-center space-x-2 px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-secondary rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300"
+                      >
+                        <Edit2 size={14} />
+                        <span>{t.admin.servicesPage.editInfo}</span>
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

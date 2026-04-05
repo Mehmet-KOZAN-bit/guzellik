@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     // Normalize name for Iyzico
     const nameParts = name.trim().split(/\s+/);
-    const firstName = nameParts[0] || 'GlowLuxe';
+    const firstName = nameParts[0] || 'The Beauty Side';
     const lastName = nameParts.slice(1).join(' ') || 'Customer';
 
     // Normalize phone for Iyzico (+90...)

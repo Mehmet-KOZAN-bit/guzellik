@@ -14,10 +14,10 @@ export default function Footer() {
 
   if (pathname.startsWith("/admin")) return null;
 
-  const phone = config?.phone || "+90 533 870 73 28";
-  const address = config?.address || "Gazeteci Hasan Tahsin Cd, Ortaköy";
-  const instagram = config?.instagram || "https://instagram.com/glowluxe";
-  const whatsapp = config?.whatsapp || "https://wa.me/905338707328";
+  const phone = config?.phone || "+90 392 444 33 11";
+  const address = config?.address || "Profesör Necmettin Erbakan Caddesi, No:41/C, Kızılbaş";
+  const instagram = config?.instagram || "https://instagram.com/thebeautyside";
+  const whatsapp = config?.whatsapp || "https://wa.me/903924443311";
 
   return (
     <footer className="bg-primary text-secondary pt-16 pb-8 border-t border-secondary/20 font-sans">
@@ -27,7 +27,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-4 text-center md:text-left">
             <h2 className="text-2xl font-bold text-accent tracking-widest uppercase font-serif">
-               {branding?.siteName || "GlowLuxe"}
+               {branding?.siteName || "The Beauty Side"}
             </h2>
             <p className="text-sm font-medium tracking-[0.2em] uppercase text-secondary/80">Beauty Center</p>
             <p className="mt-4 text-sm text-accent/70 max-w-xs mx-auto md:mx-0 font-serif italic">
@@ -87,7 +87,7 @@ export default function Footer() {
 
 
         <div className="mt-16 pt-8 border-t border-secondary/10 text-center text-sm text-accent/60 flex flex-col items-center">
-          <p>&copy; {new Date().getFullYear()} {branding?.siteName || "GlowLuxe"} Beauty Center. {t.footer.rights}</p>
+          <p>&copy; {new Date().getFullYear()} {branding?.siteName || "The Beauty Side"} Beauty Center. {t.footer.rights}</p>
         </div>
       </div>
     </footer>

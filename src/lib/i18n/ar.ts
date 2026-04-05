@@ -85,7 +85,7 @@ export const ar = {
   },
   footer: {
     address: "شارع حسن تحسين، أورتاكوي",
-    phone: "+90 533 870 73 28",
+    phone: "+90 111 111 11 11",
     rights: "جميع الحقوق محفوظة.",
     explore: "اكتشف",
   },

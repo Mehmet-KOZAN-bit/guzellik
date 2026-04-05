@@ -20,12 +20,12 @@ export default function ContactPage() {
 
   // Fallback values if config is not yet available
   const displayConfig = config || {
-    phone: "+90 533 870 73 28",
-    email: "info@glowluxe.com",
-    address: "Gazeteci Hasan Tahsin Cd, Ortaköy",
+    phone: "+90 392 444 33 11",
+    email: "info@thebeautyside.com",
+    address: "Profesör Necmettin Erbakan Caddesi, No:41/C, Kızılbaş",
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d408.5!2d33.3386417!3d35.199878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14de1111d1d4e633%3A0xb500de3788f22f93!2sGLOWLUXE%20UNİSEX!5e0!3m2!1sen!2str!4v1710200000000!5m2!1sen!2str",
-    instagram: "https://instagram.com/glowluxe",
-    whatsapp: "https://wa.me/905338707328"
+    instagram: "https://instagram.com/thebeautyside",
+    whatsapp: "https://wa.me/903924443311"
   };
 
   return (
@@ -130,7 +130,7 @@ export default function ContactPage() {
             allowFullScreen={false}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="GlowLuxe Beauty Center Location"
+            title="The Beauty Side Beauty Center Location"
           />
         </motion.div>
 

@@ -97,7 +97,7 @@ export default function Dashboard() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">{t.admin.dashboard.title}</h1>
           <p className="text-gray-500 font-medium mt-1 uppercase text-xs tracking-widest leading-relaxed">
-            {t.admin.dashboard.subtitle} {branding?.siteName || "GlowLuxe"}
+            {t.admin.dashboard.subtitle} {branding?.siteName || "The Beauty Side"}
           </p>
         </div>
         <div className="hidden sm:flex items-center space-x-2 bg-white border border-gray-200 p-1 rounded-xl shadow-sm">

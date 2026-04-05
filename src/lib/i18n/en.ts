@@ -10,8 +10,8 @@ export const en = {
   },
   hero: {
     welcome: "Welcome to Next Level Beauty",
-    centerTitle: "Unisex Beauty Center",
-    title: "GlowLuxe Unisex Beauty Center",
+    centerTitle: " Beauty Center",
+    title: "The Beauty Side Beauty Center",
     subtitle: "Premium Hair & Beauty Experience",
     bookBtn: "Book Appointment",
     servicesBtn: "View Services",
@@ -23,7 +23,7 @@ export const en = {
     averageRating: "Average Rating"
   },
   whyUs: {
-    title: "The GlowLuxe Difference",
+    title: "The The Beauty Side Difference",
     subtitle: "Why Choose Us",
     features: {
       products: { title: "Premium Products", desc: "We use only top-tier, skin-safe products from trusted international brands." },
@@ -85,8 +85,8 @@ export const en = {
     exploreBtn: "Explore Services"
   },
   footer: {
-    address: "Gazeteci Hasan Tahsin Cd, Ortaköy",
-    phone: "+90 533 870 73 28",
+    address: "Profesör Necmettin Erbakan Caddesi, No:41/C, Kızılbaş",
+    phone: "+90 392 444 33 11",
     rights: "All rights reserved.",
     explore: "Explore",
   },
@@ -97,7 +97,7 @@ export const en = {
     experience: "The Experience",
     redefiningTitle: "Redefining Beauty",
     redefiningSubtitle: "Standards",
-    description1: "At GlowLuxe Unisex Beauty Center, we believe that true beauty comes from confidence and exceptional care. Founded with a vision to provide a luxury experience for everyone, we blend modern trends with timeless techniques.",
+    description1: "At The Beauty Side Beauty Center, we believe that true beauty comes from confidence and exceptional care. Founded with a vision to provide a luxury experience for everyone, we blend modern trends with timeless techniques.",
     description2: "Our team of expert stylists and aestheticians are dedicated to offering personalized treatments in a relaxing, premium environment. Whether it's a simple trim or a complete transformation, we ensure every visit leaves you glowing.",
   },
   contact: {
@@ -134,7 +134,7 @@ export const en = {
       mins: "mins",
       experience: "Service Experience",
       ready: "Ready to Shine?",
-      readyDesc: "Book your session with our experts today and experience the GlowLuxe touch.",
+      readyDesc: "Book your session with our experts today and experience the The Beauty Side touch.",
       expertCare: "Expert Care",
       professionalists: "Professional Specialists"
     },
@@ -229,7 +229,8 @@ export const en = {
       longDescRu: "Long Description (RU)",
       longDescAr: "Long Description (AR)",
       editInfo: "Edit Info",
-      min: "min"
+      min: "min",
+      deleteConfirm: "Are you sure you want to delete this service?"
     },
     galleryPage: {
       title: "Gallery Portfolio",

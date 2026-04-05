@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GlowLuxe Beauty Center",
-  description: "Premium Unisex Hair & Beauty Experience",
+  title: "The Beauty Side Beauty Center",
+  description: "Premium  Hair & Beauty Experience",
 };
 
 export default function RootLayout({

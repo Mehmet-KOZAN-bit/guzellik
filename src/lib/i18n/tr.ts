@@ -9,8 +9,8 @@ export const tr = {
   },
   hero: {
     welcome: "Güzellikte Bir Üst Seviyeye Hoş Geldiniz",
-    centerTitle: "Uniseks Güzellik Merkezi",
-    title: "GlowLuxe Unisex Güzellik Merkezi",
+    centerTitle: " Güzellik Merkezi",
+    title: "The Beauty Side  Güzellik Merkezi",
     subtitle: "Premium Saç ve Güzellik Deneyimi",
     bookBtn: "Randevu Al",
     servicesBtn: "Hizmetleri İncele",
@@ -22,7 +22,7 @@ export const tr = {
     averageRating: "Ortalama Puan"
   },
   whyUs: {
-    title: "GlowLuxe Farkı",
+    title: "The Beauty Side Farkı",
     subtitle: "Neden Biz?",
     features: {
       products: { title: "Premium Ürünler", desc: "Güvenliğiniz için sadece uluslararası markaların en üst segment ürünlerini kullanıyoruz." },
@@ -84,8 +84,8 @@ export const tr = {
     exploreBtn: "Hizmetleri Keşfet"
   },
   footer: {
-    address: "Gazeteci Hasan Tahsin Cd, Ortaköy",
-    phone: "+90 533 870 73 28",
+    address: "Profesör Necmettin Erbakan Caddesi, No:41/C, Kızılbaş",
+    phone: "+90 392 444 33 11",
     rights: "Tüm hakları saklıdır.",
     explore: "Keşfedin",
   },
@@ -96,7 +96,7 @@ export const tr = {
     experience: "Deneyim",
     redefiningTitle: "Güzelliği Yeniden",
     redefiningSubtitle: "Tanımlıyoruz",
-    description1: "GlowLuxe Unisex Güzellik Merkezi'nde gerçek güzelliğin özgüven ve olağanüstü bakımdan geldiğine inanıyoruz. Herkese lüks bir deneyim sunma vizyonuyla kurulan merkezimizde, modern trendleri zamansız tekniklerle harmanlıyoruz.",
+    description1: "The Beauty Side  Güzellik Merkezi'nde gerçek güzelliğin özgüven ve olağanüstü bakımdan geldiğine inanıyoruz. Herkese lüks bir deneyim sunma vizyonuyla kurulan merkezimizde, modern trendleri zamansız tekniklerle harmanlıyoruz.",
     description2: "Uzman stilistlerimiz ve estetisyenlerimizden oluşan ekibimiz, rahatlatıcı ve premium bir ortamda kişiselleştirilmiş tedaviler sunmaya kendini adamıştır. İster basit bir düzeltme ister tam bir dönüşüm olsun, her ziyaretinizin sizi ışıldatarak sonlanmasını sağlıyoruz.",
   },
   contact: {
@@ -133,7 +133,7 @@ export const tr = {
       mins: "dk",
       experience: "Hizmet Deneyimi",
       ready: "Parlamaya Hazır Mısın?",
-      readyDesc: "Bugün uzmanlarımızdan randevu alın ve GlowLuxe dokunuşunu deneyimleyin.",
+      readyDesc: "Bugün uzmanlarımızdan randevu alın ve The Beauty Side dokunuşunu deneyimleyin.",
       expertCare: "Uzman Bakımı",
       professionalists: "Profesyonel Uzmanlar"
     },
@@ -228,7 +228,8 @@ export const tr = {
       longDescRu: "Uzun Açıklama (RU)",
       longDescAr: "Uzun Açıklama (AR)",
       editInfo: "Bilgileri Düzenle",
-      min: "dk"
+      min: "dk",
+      deleteConfirm: "Bu hizmeti silmek istediğinizden emin misiniz?"
     },
     galleryPage: {
       title: "Galeri Portföyü",

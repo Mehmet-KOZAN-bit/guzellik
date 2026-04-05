@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=2000"
-            alt="About GlowLuxe"
+            alt="About The Beauty Side"
             fill
             className="object-cover"
             priority

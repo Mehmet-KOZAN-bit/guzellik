@@ -98,7 +98,7 @@ export default function AppointmentsPage() {
     if (phone.startsWith("0")) phone = "90" + phone.slice(1);
     else if (!phone.startsWith("90")) phone = "90" + phone;
 
-    const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz başarıyla oluşturulmuştur.\n\nGlowLuxe'ü tercih ettiğiniz için teşekkür ederiz!`;
+    const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz başarıyla oluşturulmuştur.\n\nThe Beauty Side'yi tercih ettiğiniz için teşekkür ederiz!`;
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
@@ -135,7 +135,7 @@ export default function AppointmentsPage() {
         else if (!phone.startsWith("90")) phone = "90" + phone;
 
         const reasonText = reason.trim() ? `\n\nİptal Nedeni: ${reason.trim()}` : "";
-        const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz iptal edilmiş ve ${appt.depositAmount} ₺ tutarındaki ön ödemeniz kartınıza iade edilmiştir.${reasonText}\n\nSağlıklı günler dileriz,\nGlowLuxe`;
+        const text = `Merhaba ${appt.name},\n\n${appt.date} - ${appt.time} tarihindeki ${appt.service.replace("-", " ")} randevunuz iptal edilmiş ve ${appt.depositAmount} ₺ tutarındaki ön ödemeniz kartınıza iade edilmiştir.${reasonText}\n\nSağlıklı günler dileriz,\nThe Beauty Side`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
         
         // Open WhatsApp immediately

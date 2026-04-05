@@ -232,7 +232,7 @@ function BookingForm() {
         <h1 className="text-2xl md:text-3xl font-light text-primary">{t.booking.title}</h1>
         <div className="w-10 h-0.5 bg-secondary mx-auto mt-3" />
         <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">
-           {branding?.siteName || "GLOWLUXE"} Premium Experience
+           {branding?.siteName || "The Beauty Side"} Premium Experience
         </p>
       </div>
 

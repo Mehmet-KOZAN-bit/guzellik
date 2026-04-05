@@ -40,7 +40,7 @@ export default function AdminLogin() {
             <Lock className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 uppercase tracking-widest">Admin Access</h1>
-          <p className="text-gray-500 mt-2 text-sm">Sign in to manage GlowLuxe</p>
+          <p className="text-gray-500 mt-2 text-sm">Sign in to manage The Beauty Side</p>
         </div>
 
         {error && (
@@ -58,7 +58,7 @@ export default function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
-              placeholder="admin@glowluxe.com"
+              placeholder="admin@thebeautyside.com"
             />
           </div>
           

@@ -53,7 +53,7 @@ export default function Navbar() {
                 <img src={branding.logoUrl} alt={branding.siteName} style={{ filter: !isScrolled ? 'brightness(0) invert(1)' : 'none' }} className="h-8 md:h-10 w-auto" />
               ) : (
                 <span className="text-2xl font-black italic tracking-tighter uppercase font-serif">
-                  {branding?.siteName || "GlowLuxe"}
+                  {branding?.siteName || "The Beauty Side"}
                 </span>
               )}
             </div>

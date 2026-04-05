@@ -10,7 +10,7 @@ const reviews = [
     service: "Keratin Treatment",
     avatar: "EY",
     stars: 5,
-    text: "Absolutely transformed my hair! The team at GlowLuxe made me feel like a VIP from the moment I walked in. The keratin treatment is silky, long-lasting, and exactly what I needed.",
+    text: "Absolutely transformed my hair! The team at The Beauty Side made me feel like a VIP from the moment I walked in. The keratin treatment is silky, long-lasting, and exactly what I needed.",
   },
   {
     name: "Sarah M.",

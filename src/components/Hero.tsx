@@ -17,7 +17,7 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <Image
           src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=2000"
-          alt={`${branding?.siteName || "GlowLuxe"} Beauty Salon`}
+          alt={`${branding?.siteName || "The Beauty Side"} Beauty Salon`}
           fill
           className="object-cover object-center scale-105"
           priority
@@ -43,7 +43,7 @@ export default function Hero() {
               {t.hero.welcome}
             </span>
             <h1 className="text-5xl md:text-7xl font-light tracking-wide leading-tight text-accent">
-               {branding?.siteName || "GlowLuxe"} <br />
+               {branding?.siteName || "The Beauty Side"} <br />
               <span className="font-serif italic text-4xl md:text-6xl text-white">{t.hero.centerTitle}</span>
             </h1>
           </motion.div>
