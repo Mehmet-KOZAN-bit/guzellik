@@ -228,7 +228,8 @@ export const ar = {
       longDescRu: "وصف طويل (RU)",
       longDescAr: "وصف طويل (AR)",
       editInfo: "تعديل المعلومات",
-      min: "دقيقة"
+      min: "دقيقة",
+      deleteConfirm: "هل أنت متأكد أنك تريد حذف هذه الخدمة؟"
     },
     galleryPage: {
       title: "معرض الأعمال",
